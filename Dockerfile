@@ -1,12 +1,15 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY polymarket/ ./polymarket/
+COPY run_bot.py .
 
-EXPOSE 8000
+ENV DRY_RUN=true \
+    LOG_LEVEL=INFO \
+    POLL_INTERVAL=30
 
-CMD ["python", "server.py"]
+CMD ["python", "run_bot.py"]

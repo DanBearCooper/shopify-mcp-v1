@@ -1,4 +1,17 @@
-mcp[cli]>=1.0.0
+# Polymarket CLOB API client (official Python SDK)
+py-clob-client>=0.18.0
+
+# Web3 / blockchain (required by py-clob-client)
+web3>=6.0.0
+
+# HTTP client
 httpx>=0.27.0
+
+# Env file loading
+python-dotenv>=1.0.0
+
+# Data validation
 pydantic>=2.0.0
-uvicorn>=0.30.0
+
+# Async support (stdlib on 3.11+, listed for clarity)
+# asyncio — stdlib

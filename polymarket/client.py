@@ -52,10 +52,15 @@ class PolymarketClient:
         )
 
     def initialize(self):
-        """Derive API credentials from private key if not provided."""
+        """Create or derive API credentials from private key if not provided.
+
+        create_or_derive_api_creds() creates new creds on first run for this
+        wallet, or derives the existing ones on subsequent runs — derive_api_key()
+        alone fails with no creds ever created before.
+        """
         if not config.api_key:
-            logger.info("Deriving L2 API credentials from private key…")
-            creds = _with_retry(self.clob.derive_api_key)
+            logger.info("Creating/deriving L2 API credentials from private key…")
+            creds = _with_retry(self.clob.create_or_derive_api_creds)
             if creds:
                 config.api_key = creds.api_key
                 config.api_secret = creds.api_secret
@@ -66,9 +71,14 @@ class PolymarketClient:
                     key=config.private_key,
                     creds=creds,
                 )
-                logger.info(f"API key derived: {creds.api_key[:8]}…")
+                logger.info(f"API credentials ready: {creds.api_key[:8]}…")
+                logger.info(
+                    "Save these to .env to skip re-derivation next run: "
+                    f"POLY_API_KEY={creds.api_key} POLY_API_SECRET={creds.api_secret} "
+                    f"POLY_API_PASSPHRASE={creds.api_passphrase}"
+                )
             else:
-                logger.warning("Could not derive API key — order placement will fail")
+                logger.warning("Could not create/derive API key — order placement will fail")
         else:
             logger.info(f"Using existing API key: {config.api_key[:8]}…")
 

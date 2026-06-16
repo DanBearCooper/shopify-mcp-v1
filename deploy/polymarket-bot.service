@@ -1,0 +1,24 @@
+[Unit]
+Description=Polymarket Auto Trading Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=botuser
+WorkingDirectory=/opt/polymarket-bot
+EnvironmentFile=/opt/polymarket-bot/.env
+ExecStart=/opt/polymarket-bot/venv/bin/python run_bot.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/var/log/polymarket-bot.log
+StandardError=append:/var/log/polymarket-bot.log
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/polymarket-bot /var/log/polymarket-bot.log
+
+[Install]
+WantedBy=multi-user.target
